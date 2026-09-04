@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You — Since Class 10</title>
+<meta name="description" content="A little corner of the internet made just for you.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#f7f1eb; --paper:#fffaf5; --ink:#302925; --muted:#786e68;
+  --accent:#a95d62; --accent2:#d59a87; --line:#e8ddd4;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans",sans-serif}
+body.lock{overflow:hidden}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600}
+button{font:inherit}
+
+#intro{
+ position:fixed;inset:0;z-index:50;display:grid;place-items:center;
+ background:var(--bg);transition:opacity .9s,visibility .9s;
+}
+#intro.hide{opacity:0;visibility:hidden;pointer-events:none}
+.intro-inner{text-align:center;padding:30px;max-width:720px}
+.eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:.72rem;color:var(--muted)}
+.intro-inner h1{font-size:clamp(3.5rem,9vw,7.5rem);line-height:.86;margin:22px 0}
+.intro-inner p{color:var(--muted);font-size:1rem}
+.enter{
+ margin-top:34px;border:1px solid var(--ink);background:transparent;padding:13px 24px;
+ border-radius:999px;cursor:pointer;transition:.25s
+}
+.enter:hover{background:var(--ink);color:white}
+
+nav{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:20;
+ background:#fffaf5dd;backdrop-filter:blur(12px);border:1px solid var(--line);
+ padding:8px 12px;border-radius:999px;display:flex;gap:5px}
+nav a{font-size:.72rem;color:var(--muted);text-decoration:none;padding:7px 10px;border-radius:999px}
+nav a:hover{background:#eee4dc;color:var(--ink)}
+
+section{min-height:100vh;padding:110px 7vw;display:grid;place-items:center}
+.hero{position:relative;overflow:hidden;text-align:center}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;filter:blur(2px);opacity:.5}
+.hero:before{width:430px;height:430px;background:#ead0c5;top:-160px;right:-100px}
+.hero:after{width:350px;height:350px;background:#e8c9c9;bottom:-150px;left:-100px}
+.hero-content{position:relative;z-index:1;max-width:900px}
+.hero h2{font-size:clamp(3.5rem,8vw,7rem);line-height:.9;margin:18px 0}
+.hero .sub{font-family:"Cormorant Garamond";font-size:1.55rem;color:var(--muted);max-width:620px;margin:auto}
+.scroll{margin-top:55px;color:var(--muted);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase}
+
+.wrap{width:min(1050px,100%);margin:auto}
+.section-title{font-size:clamp(2.8rem,6vw,5rem);line-height:.95;margin-bottom:18px}
+.section-intro{color:var(--muted);max-width:620px;line-height:1.7;margin-bottom:55px}
+
+.timeline{position:relative;padding-left:30px;border-left:1px solid var(--line)}
+.event{position:relative;padding:0 0 65px 38px}
+.event:before{content:"";position:absolute;left:-36px;top:8px;width:10px;height:10px;border:2px solid var(--accent);background:var(--bg);border-radius:50%}
+.year{font-size:.72rem;letter-spacing:.18em;color:var(--accent);text-transform:uppercase}
+.event h3{font-size:2.1rem;margin:8px 0}
+.event p{color:var(--muted);line-height:1.7;max-width:700px}
+
+.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.photo{
+ aspect-ratio:4/5;border-radius:4px;overflow:hidden;background:#eadfd7;
+ display:grid;place-items:center;color:#9b8c83;text-align:center;padding:20px;
+ position:relative
+}
+.photo:nth-child(2){margin-top:45px}.photo:nth-child(3){margin-top:-20px}
+.photo:before{content:"PHOTO";font-size:.65rem;letter-spacing:.2em;opacity:.7}
+.photo span{position:absolute;bottom:12px;left:12px;font-size:.72rem;opacity:.7}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{
+ background:var(--paper);border:1px solid var(--line);min-height:210px;padding:28px;
+ border-radius:8px;cursor:pointer;transition:transform .3s,box-shadow .3s
+}
+.card:hover{transform:translateY(-5px);box-shadow:0 15px 35px #5a403010}
+.card .num{color:var(--accent);font-size:.72rem;letter-spacing:.16em}
+.card h3{font-size:1.9rem;margin:35px 0 8px}.card p{color:var(--muted);line-height:1.6}
+.hidden-note{display:none}.card.open .hidden-note{display:block}
+.card.open .prompt{display:none}
+
+.quiz{background:var(--paper);border:1px solid var(--line);padding:34px;border-radius:10px;max-width:760px}
+.question{font-family:"Cormorant Garamond";font-size:2.2rem;margin-bottom:24px}
+.options{display:grid;gap:10px}
+.option{border:1px solid var(--line);background:transparent;text-align:left;padding:14px;border-radius:6px;cursor:pointer}
+.option:hover{border-color:var(--accent)}
+#quiz-result{margin-top:20px;color:var(--accent);min-height:24px}
+
+.letter{background:var(--paper);border:1px solid var(--line);padding:clamp(28px,6vw,70px);max-width:820px;box-shadow:0 25px 70px #5a40300b}
+.letter p{font-family:"Cormorant Garamond";font-size:1.45rem;line-height:1.65;color:#504641}
+.letter p+p{margin-top:22px}
+.signature{margin-top:35px;font-family:"Cormorant Garamond";font-size:2rem}
+
+.final{background:#211c1a;color:#f7eee8;text-align:center;position:relative;overflow:hidden}
+.final .eyebrow{color:#bfaea4}
+.final h2{font-size:clamp(3.5rem,9vw,7rem);line-height:.9;margin:20px 0}
+.final p{color:#cbbdb5;max-width:620px;margin:auto;line-height:1.7}
+.play{
+ margin-top:38px;width:76px;height:76px;border-radius:50%;border:1px solid #f7eee8;
+ background:transparent;color:#f7eee8;cursor:pointer;font-size:1.25rem;transition:.3s
+}
+.play:hover{background:#f7eee8;color:#211c1a}
+.audio-wrap{margin-top:30px;display:none}
+.audio-wrap.show{display:block}
+audio{width:min(500px,90vw)}
+.final-message{margin-top:45px;font-family:"Cormorant Garamond";font-size:1.8rem;opacity:0;transform:translateY(10px);transition:1s}
+.final-message.show{opacity:1;transform:none}
+
+footer{background:#211c1a;color:#8f817a;text-align:center;padding:20px;font-size:.7rem;letter-spacing:.1em}
+
+@media(max-width:700px){
+ nav{display:none}
+ section{padding:90px 22px}
+ .photos,.cards{grid-template-columns:1fr}
+ .photo:nth-child(2),.photo:nth-child(3){margin-top:0}
+ .timeline{padding-left:15px}.event{padding-left:25px}.event:before{left:-21px}
+}
+</style>
+</head>
+<body class="lock">
+
+<div id="intro">
+  <div class="intro-inner">
+    <div class="eyebrow">a little something for you</div>
+    <h1>Hey, Brishti.</h1>
+    <p>I've been meaning to make you something.</p>
+    <button class="enter" onclick="enterSite()">Take me there&nbsp; →</button>
+  </div>
+</div>
+
+<nav>
+  <a href="#beginning">01</a><a href="#years">02</a><a href="#love">03</a><a href="#quiz">04</a><a href="#letter">05</a><a href="#surprise">06</a>
+</nav>
+
+<main>
+<section class="hero">
+  <div class="hero-content">
+    <div class="eyebrow">for my favourite person</div>
+    <h2>Us, since<br>class 10.</h2>
+    <p class="sub">A tiny corner of the internet for all the years, memories, laughter and love that somehow became <i>us</i>.</p>
+    <div class="scroll">↓ &nbsp; start the story</div>
+  </div>
+</section>
+
+<section id="beginning">
+ <div class="wrap">
+  <div class="eyebrow">01 / the beginning</div>
+  <h2 class="section-title">Once upon a<br>classroom.</h2>
+  <div class="timeline">
+   <div class="event"><div class="year">Class 8</div><h3>The beginning</h3><p>Ekta manusher "Kire, kemon aachhish?" shuinna tor birokti hoislo.</p></div>
+   <div class="event"><div class="year">The next chapter</div><h3>And then somehow…</h3><p>Tui shei manush er gola na shunle tor din kaate na🌚</p></div>
+   <div class="event"><div class="year">Today</div><h3>Look at us now.</h3><p>Years later, you're still the person I want to tell everything to💕</p></div>
+  </div>
+ </div>
+</section>
+
+<section id="years">
+ <div class="wrap">
+  <div class="eyebrow">02 / the years</div>
+  <h2 class="section-title">Look how far<br>we've come.</h2>
+  <div class="photos">
+   <div class="photo"><img src="photos/pic_1.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_2.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_3.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_4.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_5.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_6.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_7.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_8.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_9.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_10.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_12.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_13.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_14.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_15.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_16.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_17.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_18.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_19.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_20.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_21.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_22.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_23.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_24.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_25.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_26.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_27.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_28.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_29.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_30.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_31.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_32.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_33.jpeg" alt="Us"></div>
+   <div class="photo"><img src="photos/pic_34.jpeg" alt="Us"></div>
+  </div>
+ </div>
+</section>
+
+<section id="love">
+ <div class="wrap">
+  <div class="eyebrow">03 / little things</div>
+  <h2 class="section-title">Things I love<br>about you.</h2>
+  <p class="section-intro">Click each card.</p>
+  <div class="cards">
+   <div class="card" onclick="this.classList.toggle('open')"><div class="num">01</div><h3 class="prompt">The way you...</h3><p class="hidden-note">you make silly (BUT CUTE) excuses when I am about to give you a scolding😭</p></div>
+   <div class="card" onclick="this.classList.toggle('open')"><div class="num">02</div><h3 class="prompt">Your little habit...</h3><p class="hidden-note">of moving your neck around while talking with a straight face🫶</p></div>
+   <div class="card" onclick="this.classList.toggle('open')"><div class="num">03</div><h3 class="prompt">My favourite thing...</h3><p class="hidden-note">is YOU BEING YOU, UNFILTERED, and most importantly NOT ANGRY💕💕</p></div>
+  </div>
+ </div>
+</section>
+
+<section id="letter">
+ <div class="wrap">
+  <div class="eyebrow">05 / a letter</div>
+  <h2 class="section-title">For you.</h2>
+  <div class="letter">
+   <p>Dear Brishti,</p>
+   <p>Tui o jns ami ita website twebsite banaisi na konodin😭, but ida kisu ekta banaisi🥀</p>
+   <p>We've grown up together. We've changed, laughed, annoyed each other, made memories and somehow kept choosing each other through all of it.</p>
+   <p>This is just a little website, but every part of it is here because of you. And I hope when you look through it, you can feel even a fraction of how much you mean to me.</p>
+   <p>Happy birthday, my favourite person. Here's to everything we've already had — and everything that's still waiting for us.</p>
+   <div class="signature">— me ♡</div>
+  </div>
+ </div>
+</section>
+
+<section id="surprise" class="final">
+ <div class="hero-content">
+  <div class="eyebrow">06 / one last thing</div>
+  <h2>I made you<br>something else.</h2>
+  <p>I couldn't quite put everything I wanted to say into a letter… so I tried something a little different.</p>
+  <button class="play" id="playBtn" onclick="playSong()">▶</button>
+  <div class="audio-wrap" id="audioWrap">
+    <audio id="song" controls preload="metadata">
+      <!-- Put your recording at audio/my-song.mp3 -->
+      <source src="audio/love.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+  <div class="final-message" id="finalMessage">
+    Happy Birthday, my love. ♡<br>
+    <small>From class 10 to wherever life takes us next.</small>
+  </div>
+ </div>
+</section>
+</main>
+<footer>made with love · for one very special person</footer>
+
+<script>
+function enterSite(){
+ document.getElementById('intro').classList.add('hide');
+ document.body.classList.remove('lock');
+}
+function playSong(){
+ const audio=document.getElementById('song');
+ const wrap=document.getElementById('audioWrap');
+ wrap.classList.add('show');
+ audio.play().catch(()=>{});
+ document.getElementById('playBtn').textContent='♫';
+ document.getElementById('finalMessage').classList.add('show');
+}
+</script>
+</body>
+</html>

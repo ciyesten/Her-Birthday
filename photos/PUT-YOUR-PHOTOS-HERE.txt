@@ -1,0 +1,1 @@
+Put your photos here and replace the three placeholder photo divs in index.html with <img src="photos/your-photo.jpg">.
